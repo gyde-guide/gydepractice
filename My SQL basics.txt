@@ -1,0 +1,149 @@
+My SQL basics
+
+1. show databases;
+2. create database db_name;
+3. use db_name;
+4. drop database db_name;
+5. grant all priviledges on db_name.*
+	to 'username'@'localhost'
+	identified by 'password';
+6. ENUM('OPD','Admitted') 		// to specify kinds of options
+7. CREATE TABLE SomeTable
+(
+   Id int NOT NULL,
+   Frequency varchar(200),
+   CONSTRAINT chk_Frequency CHECK (Frequency IN ('Daily', 'Weekly', 'Monthly', 'Yearly'))
+)
+8. show columns from user
+
+9. SQL SELECT
+	SELECT * 							// * to bring all columns (, in between)
+	FROM table 							// which table
+	WHERE column1 = 'some_text'			//specify columns
+	ORDER BY column1 ASC;
+
+10. SQL INSERT
+	INSERT INTO table (col1, col2)
+	VALUES (val1, val2)	;		// order must match
+
+11. SQL UPDATE
+	UPDATE table
+	SET col1 = 'this', col2 = 'that'
+	WHERE id = 1 ;
+
+12. SQL DELETE
+	DELETE FROM table
+	WHERE id = 1 LIMT 1;			// Limit sets number of deleted elements to 1 (not necessary, just precaution)
+
+13. to alter a. proviously made table's columns
+	ALTER TABLE table
+	ADD INDEX index_name (column) AFTER column ;				// this after would just allign the new column at particular location.
+
+14. to store date and time -> type = datetime, use NOW() func to get current date and time.
+https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
+
+15. One to many relationships woukd mean you make a table (Like our full tags list) and populate it everytime a new tag is added.
+	Many to many relationships would mean creating new tables -> called intermediarry table!
+	
+////////////////////////////////////////////////////////////
+Code snippets
+////////////////////////////////////////////////////////////
+
+
+CREATE TABLE user ( id INT(11) NOT NULL AUTO_INCREMENT, first_name VARCHAR(50), last_name VARCHAR(50), email VARCHAR(50), user_name VARCHAR(32), password VARCHAR(32), level ENUM('Teacher', 'Student'), user_roles ENUM('Client', 'Admin'), num_feedbacks INT(12), num_invites INT(12), num_sessions INT(12), num_days_since_last_visit INT(5), num_following INT(12), num_followers INT(12), PRIMARY KEY (id));
+
+// havent included -> postlist, avg of (both),  navigations list.
+////////////////////
+
+CREATE TABLE post ( id INT(11) NOT NULL AUTO_INCREMENT, title VARCHAR(80), user_id INT(11), abstract TEXT, date_time DATETIME, logical FLOAT, practical FLOAT, creative FLOAT, significance FLOAT, difficulty FLOAT, num_endorses INT(12), num_shares INT(12), PRIMARY KEY (id));
+
+// havent included -> dont have attachement list, tags list, contribution_list, 
+
+////////////////////
+
+CREATE TABLE comments (id INT(12) NOT NULL AUTO_INCREMENT, author_id INT(11), content TEXT, date_time DATETIME, logical FLOAT, practical FLOAT, creative FLOAT, significance FLOAT, difficulty FLOAT, PRIMARY KEY (id) );
+
+////////////////////
+
+CREATE TABLE tags (id INT(12) NOT NULL AUTO_INCREMENT, name VARCHAR(255), category VARCHAR(255),  PRIMARY KEY (id) );
+
+////////////////////
+
+CREATE TABLE tags_list (id INT(12) NOT NULL AUTO_INCREMENT, tag_id )
+
+
+////////////////////
+////////////////////
+
+Tables to create -> 
+1. A table for each post, where we store
+	1. Which user has voted significant etc. 
+	...
+2. A table for each user -> figure out their ranking?
+
+////////////////////
+
+
+INSERT INTO user (id, first_name, last_name, email, user_name, level, user_roles, num_feedbacks, num_invites, num_sessions, num_days_since_last_visit, num_following, num_followers) VALUES (1, 'Shrey', 'Kakkar', 'shreyk98@gmail.com', 'shreyk98', 'Student', 'Admin',  1,1,1,1,1,1);
+
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+
+1. Things to do
+	1. Store who likes a post too (not just number)
+	2. creating tables dynamically too!
+	3. 
+
+
+	trial
+
+CREATE TABLE employee (
+    employee_id INTEGER PRIMARY KEY,
+    employee_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE company (
+    company_id INTEGER PRIMARY KEY,
+    company_name VARCHAR(300) NOT NULL
+);
+
+CREATE TABLE company_employee (
+    employee_id INTEGER NOT NULL,
+    company_id INTEGER NOT NULL,
+    work_hour_start TIME NOT NULL,
+    work_hour_end TIME NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee (employee_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES company (company_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    PRIMARY KEY (employee_id, company_id, work_hour_start, work_hour_end)
+);
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+
+CREATE TABLE FOO ( 
+  id int primary key not null,
+  int1 int, 
+  int2 int, 
+  int3 int
+)
+
+CREATE TABLE Fruits (
+  id int primary key not null,
+  name varchar(30)
+)
+
+CREATE TABLE FOOFruits (
+  FruitID int references Fruits (ID),
+  FooID int references FOO(id),
+  constraint pk_FooFruits primary key (FruitID, FooID)
+)
+To add Apple fruit to the list of a specific FOO object with ID=5, you would:
+
+INSERT FOOFruits(FooID, FruitID)
+SELECT 5, ID FROM Fruits WHERE name = 'Apple'
+
